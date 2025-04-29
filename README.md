@@ -1,4 +1,4 @@
-# Gift_Flower_Website-
+# Gift_Flower_Website
 # 📘 HƯỚNG DẪN QUY TRÌNH GIT FLOW CHO NHÓM PHÁT TRIỂN PHẦN MỀM
 
 ## 👥 Thành viên nhóm: 4 người
