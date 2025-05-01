@@ -1,228 +1,219 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { CartItem } from '../types/CartItem';
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [isCompanyInvoice, setIsCompanyInvoice] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
 
-  // Handle quantity changes
-  const handleDecrease = (productId: number, currentQuantity: number) => {
+  // Debounce để tránh gọi API trùng lặp
+  const debounce = (func: (...args: any[]) => void, wait: number) => {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
+
+  const handleRemoveFromCart = useCallback(
+    debounce((productId: string) => {
+      removeFromCart(productId);
+    }, 300),
+    [removeFromCart]
+  );
+
+  const handleDecrease = (productId: string, currentQuantity: number) => {
     if (currentQuantity > 1) {
       updateQuantity(productId, currentQuantity - 1);
     }
   };
 
-  const handleIncrease = (productId: number, currentQuantity: number) => {
+  const handleIncrease = (productId: string, currentQuantity: number) => {
     updateQuantity(productId, currentQuantity + 1);
   };
 
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
+
   return (
-    <div className="flex flex-col min-h-[50vh]">
-      {/* Breadcrumb */}
-      <div className="w-full bg-gray-100 flex items-center px-6 py-3 border-b">
-        <nav className="flex items-center gap-2 text-sm">
-          <Link to="/" className="flex items-center gap-1 text-gray-700 hover:text-pink-500 transition-colors">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m-4 0h4" />
-            </svg>
-            <span className="font-semibold">Trang chủ</span>
-          </Link>
-          <span className="text-gray-400">›</span>
-          <span className="text-pink-600 font-medium">Giỏ hàng</span>
-        </nav>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex mb-8 border-b pb-1">
+        <div className="flex-1 text-center bg-pink-500 text-white py-2 font-medium">
+          GIỎ HÀNG
+        </div>
+        <div className="flex-1 text-center bg-gray-200 text-gray-500 py-2 font-medium">
+          GIAO HÀNG VÀ THANH TOÁN
+        </div>
+        <div className="flex-1 text-center bg-gray-200 text-gray-500 py-2 font-medium">
+          HOÀN TẤT
+        </div>
       </div>
 
-      {/* Main content */}
-      <div className="max-w-7xl mx-auto w-full p-6">
-        {cartItems.length === 0 ? (
-          // Empty cart state
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="flex-1 flex flex-col items-center justify-center py-16">
-              <div className="w-24 h-24 mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-              </div>
-              <p className="text-gray-500 mb-6">Không có sản phẩm nào trong giỏ hàng của bạn</p>
-              <Link to="/products" className="bg-pink-500 text-white px-6 py-2 rounded-md hover:bg-pink-600 transition-colors">
-                Tiếp tục mua sắm
+      {cartItems.length === 0 ? (
+        <div className="text-center py-16">
+          <div className="w-24 h-24 mx-auto mb-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-full h-full text-gray-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+          </div>
+          <p className="text-gray-500 mb-6">Không có sản phẩm nào trong giỏ hàng của bạn</p>
+          <Link
+            to="/"
+            className="bg-pink-500 text-white px-6 py-2 rounded hover:bg-pink-600 transition-colors"
+          >
+            Tiếp tục mua sắm
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="md:w-2/3">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="py-2 px-2 text-gray-600">Sản phẩm</th>
+                  <th className="py-2 px-2 text-gray-600">Tên</th>
+                  <th className="py-2 px-2 text-gray-600 text-center">Đơn giá</th>
+                  <th className="py-2 px-2 text-gray-600 text-center">Số lượng</th>
+                  <th className="py-2 px-2 text-gray-600 text-center">Thành tiền</th>
+                  <th className="py-2 px-2 text-gray-600 text-center">Xóa</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cartItems.map((item: CartItem) => (
+                  <tr key={item._id} className="border-b">
+                    <td className="py-4 px-2">
+                      <div className="w-20 h-20 bg-gray-100">
+                        <img
+                          src={item.image || '/images/placeholder.png'}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </td>
+                    <td className="py-4 px-2">
+                      <div className="font-medium text-gray-800">{item.name}</div>
+                    </td>
+                    <td className="py-4 px-2 text-center">
+                      <div className="text-pink-600 font-medium">
+                        {item.price?.toLocaleString() || 0} đ
+                      </div>
+                      {item.originalPrice && (
+                        <div className="text-gray-400 line-through text-xs">
+                          {item.originalPrice.toLocaleString()} đ
+                        </div>
+                      )}
+                    </td>
+                    <td className="py-4 px-2">
+                      <div className="flex items-center justify-center">
+                        <button
+                          onClick={() => handleDecrease(item._id, item.quantity)}
+                          className="w-8 h-8 border border-gray-300 flex items-center justify-center"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="text"
+                          value={item.quantity}
+                          readOnly
+                          className="w-10 h-8 border-t border-b border-gray-300 text-center"
+                        />
+                        <button
+                          onClick={() => handleIncrease(item._id, item.quantity)}
+                          className="w-8 h-8 border border-gray-300 flex items-center justify-center"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </td>
+                    <td className="py-4 px-2 text-center font-medium text-pink-600">
+                      {((item.price || 0) * item.quantity).toLocaleString()} đ
+                    </td>
+                    <td className="py-4 px-2 text-center">
+                      <button
+                        onClick={() => handleRemoveFromCart(item._id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        ×
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="flex mt-6 gap-4">
+              <Link
+                to="/"
+                className="border border-pink-500 text-pink-500 px-4 py-2 hover:bg-pink-50 transition-colors"
+              >
+                TIẾP TỤC MUA HÀNG →
               </Link>
+
+              <button className="border border-gray-300 text-gray-600 px-4 py-2 hover:bg-gray-50 transition-colors">
+                CẬP NHẬT GIỎ HÀNG
+              </button>
             </div>
-            
-            {/* Right column - Delivery time */}
-            <div className="w-full lg:w-80">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Thời gian giao hàng</h2>
-              
-              <div className="bg-white rounded-lg shadow p-4 mb-4">
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Chọn ngày</label>
-                  <input 
-                    type="date" 
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Chọn thời gian</label>
-                  <select 
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
-                  >
-                    <option value="">Chọn thời gian</option>
-                    <option value="morning">Buổi sáng (8:00 - 12:00)</option>
-                    <option value="afternoon">Buổi chiều (13:00 - 17:00)</option>
-                    <option value="evening">Buổi tối (18:00 - 21:00)</option>
-                  </select>
-                </div>
-                
-                <div className="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id="invoice" 
-                    className="mr-2 accent-pink-500"
-                    checked={isCompanyInvoice}
-                    onChange={() => setIsCompanyInvoice(!isCompanyInvoice)}
-                  />
-                  <label htmlFor="invoice" className="text-sm text-gray-700">Xuất hóa đơn công ty</label>
-                </div>
+
+            <div className="mt-6">
+              <div className="border border-gray-300 p-4 inline-block">
+                <input
+                  type="text"
+                  placeholder="Mã khuyến mãi (Nếu có)"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  className="border border-gray-300 p-2 mr-2"
+                />
+                <button className="bg-blue-500 text-white px-4 py-2">ÁP DỤNG</button>
               </div>
             </div>
           </div>
-        ) : (
-          // Cart with products
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left column - Cart items */}
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-gray-800 mb-4">Thông tin sản phẩm</h1>
-              
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b">
-                    <tr>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Thông tin sản phẩm</th>
-                      <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">Đơn giá</th>
-                      <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">Số lượng</th>
-                      <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">Thành tiền</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {cartItems.map((item) => (
-                      <tr key={item.id}>
-                        <td className="py-4 px-4">
-                          <div className="flex items-center">
-                            <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded overflow-hidden mr-4">
-                              <img src={item.image || "/placeholder.png"} alt={item.name} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="flex-1">
-                              <h3 className="text-sm font-medium text-gray-800 mb-1">{item.name}</h3>
-                              <button 
-                                onClick={() => removeFromCart(item.id)}
-                                className="text-pink-500 text-xs hover:underline"
-                              >
-                                Xóa
-                              </button>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-4 text-center">
-                          <div className="text-pink-600 font-bold">{item.price.toLocaleString()}₫</div>
-                          {item.originalPrice && (
-                            <div className="text-gray-400 line-through text-xs">{item.originalPrice.toLocaleString()}₫</div>
-                          )}
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex items-center justify-center">
-                            <button 
-                              onClick={() => handleDecrease(item.id, item.quantity)}
-                              className="w-8 h-8 border border-gray-300 flex items-center justify-center rounded-l"
-                            >
-                              -
-                            </button>
-                            <input 
-                              type="text" 
-                              value={item.quantity} 
-                              readOnly
-                              className="w-10 h-8 border-t border-b border-gray-300 text-center"
-                            />
-                            <button 
-                              onClick={() => handleIncrease(item.id, item.quantity)}
-                              className="w-8 h-8 border border-gray-300 flex items-center justify-center rounded-r"
-                            >
-                              +
-                            </button>
-                          </div>
-                        </td>
-                        <td className="py-4 px-4 text-center font-bold text-pink-600">
-                          {(item.price * item.quantity).toLocaleString()}₫
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+
+          <div className="md:w-1/3">
+            <div className="border border-gray-200 p-4">
+              <h2 className="text-xl font-bold text-center border-b pb-2 mb-4">TỔNG GIỎ HÀNG</h2>
+
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">Thành tiền</span>
+                <span className="text-pink-600 font-medium">{totalAmount.toLocaleString()} đ</span>
               </div>
-            </div>
-            
-            {/* Right column - Delivery and payment */}
-            <div className="w-full lg:w-80">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Thời gian giao hàng</h2>
-              
-              <div className="bg-white rounded-lg shadow p-4 mb-4">
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Chọn ngày</label>
-                  <input 
-                    type="date" 
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Chọn thời gian</label>
-                  <select 
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
-                  >
-                    <option value="">Chọn thời gian</option>
-                    <option value="morning">Buổi sáng (8:00 - 12:00)</option>
-                    <option value="afternoon">Buổi chiều (13:00 - 17:00)</option>
-                    <option value="evening">Buổi tối (18:00 - 21:00)</option>
-                  </select>
-                </div>
-                
-                <div className="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id="invoice" 
-                    className="mr-2 accent-pink-500"
-                    checked={isCompanyInvoice}
-                    onChange={() => setIsCompanyInvoice(!isCompanyInvoice)}
-                  />
-                  <label htmlFor="invoice" className="text-sm text-gray-700">Xuất hóa đơn công ty</label>
-                </div>
+
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">Giao hàng</span>
+                <span className="text-green-600">Giao hàng miễn phí</span>
               </div>
-              
-              <div className="bg-white rounded-lg shadow p-4">
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-600">Tổng tiền:</span>
-                  <span className="font-bold text-pink-600">{totalAmount.toLocaleString()}₫</span>
-                </div>
-                
-                <button className="w-full bg-pink-500 text-white py-3 rounded-md font-medium hover:bg-pink-600 transition-colors mt-4">
-                  Thanh toán
-                </button>
+
+              <div className="flex justify-between py-4 font-bold">
+                <span>Tổng cộng</span>
+                <span className="text-pink-600">{totalAmount.toLocaleString()} đ</span>
               </div>
+
+              <button
+                onClick={handleCheckout}
+                className="w-full bg-blue-500 text-white py-3 text-center mt-4 hover:bg-blue-600 transition-colors"
+              >
+                GIAO HÀNG VÀ THANH TOÁN
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

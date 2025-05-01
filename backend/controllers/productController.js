@@ -1,5 +1,7 @@
 import Product from '../models/Product.js';
 
+const BASE_URL = "http://localhost:5000";
+
 // [GET] /api/products
 export const getAllProducts = async (req, res) => {
   try {
@@ -9,7 +11,9 @@ export const getAllProducts = async (req, res) => {
       const isNew = Date.now() - new Date(p.importedAt).getTime() <= 7 * 24 * 60 * 60 * 1000;
       return {
         ...p.toObject(),
-        isNew 
+        isNew,
+        image: p.image?.startsWith("http") ? p.image : `${BASE_URL}${p.image}`,
+        images: (p.images || []).map(img => img.startsWith("http") ? img : `${BASE_URL}${img}`)
       };
     });
 
@@ -18,7 +22,6 @@ export const getAllProducts = async (req, res) => {
     res.status(500).json({ error: 'Lỗi khi lấy danh sách sản phẩm' });
   }
 };
-
 
 // [POST] /api/products
 export const createProduct = async (req, res) => {
@@ -36,7 +39,15 @@ export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
-    res.json(product);
+
+    const image = product.image?.startsWith("http") ? product.image : `${BASE_URL}${product.image}`;
+    const images = (product.images || []).map(img => img.startsWith("http") ? img : `${BASE_URL}${img}`);
+
+    res.json({
+      ...product.toObject(),
+      image,
+      images
+    });
   } catch (err) {
     res.status(500).json({ error: 'Lỗi server' });
   }
@@ -69,21 +80,20 @@ export const getNewProducts = async (req, res) => {
     const now = new Date();
     const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    console.log("🕒 Now:", now.toISOString());
-    console.log("📅 Ngày giới hạn (7 ngày trước):", oneWeekAgo.toISOString());
-
     const products = await Product.find({
-      importedAt: { $gte: oneWeekAgo } // đảm bảo dùng đúng field bạn có
+      importedAt: { $gte: oneWeekAgo } 
     }).sort({ importedAt: -1 });
 
-    console.log("📦 Sản phẩm tìm được:", products.length);
-    products.forEach(p => {
-      console.log(`👉 ${p.name}: importedAt = ${p.importedAt}`);
+    const enriched = products.map(p => {
+      return {
+        ...p.toObject(),
+        image: p.image?.startsWith("http") ? p.image : `${BASE_URL}${p.image}`,
+        images: (p.images || []).map(img => img.startsWith("http") ? img : `${BASE_URL}${img}`)
+      };
     });
 
-    res.json(products);
+    res.json(enriched);
   } catch (err) {
-    console.error("❌ Lỗi khi lấy sản phẩm mới:", err);
     res.status(500).json({ error: 'Không thể lấy sản phẩm mới' });
   }
 };

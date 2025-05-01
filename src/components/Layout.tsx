@@ -14,13 +14,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
 
   // Handle quantity changes for cart dropdown
-  const handleDecrease = (productId: number, currentQuantity: number) => {
+  const handleDecrease = (productId: string, currentQuantity: number) => {
     if (currentQuantity > 1) {
       updateQuantity(productId, currentQuantity - 1);
     }
   };
 
-  const handleIncrease = (productId: number, currentQuantity: number) => {
+  const handleIncrease = (productId: string, currentQuantity: number) => {
     updateQuantity(productId, currentQuantity + 1);
   };
   
@@ -309,13 +309,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <div>
                       <div className="max-h-64 overflow-y-auto divide-y">
                         {cartItems.map((item) => (
-                          <div key={item.id} className="flex p-3 gap-2">
+                          <div key={item._id} className="flex p-3 gap-2">
                             <img src={item.image} alt={item.name} className="w-14 h-14 object-cover rounded" />
                             <div className="flex-1 min-w-0">
                               <div className="text-xs font-medium text-gray-800 truncate">{item.name}</div>
                               <button
                                 className="text-pink-500 text-xs hover:underline"
-                                onClick={() => removeFromCart(item.id)}
+                                onClick={() => removeFromCart(item._id)}
                                 type="button"
                               >
                                 Xóa
@@ -324,13 +324,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 <span className="text-xs">Số lượng</span>
                                 <button
                                   className="w-5 h-5 border border-gray-300 rounded text-gray-600"
-                                  onClick={() => handleDecrease(item.id, item.quantity)}
+                                  onClick={() => handleDecrease(item._id, item.quantity)}
                                   type="button"
                                 >-</button>
                                 <span className="w-6 text-center text-xs">{item.quantity}</span>
                                 <button
                                   className="w-5 h-5 border border-gray-300 rounded text-gray-600"
-                                  onClick={() => handleIncrease(item.id, item.quantity)}
+                                  onClick={() => handleIncrease(item._id, item.quantity)}
                                   type="button"
                                 >+</button>
                               </div>
@@ -364,7 +364,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Main navigation menu */}
       <div className="bg-gradient-to-r from-pink-500 to-purple-700 w-full flex items-center px-6 py-3 text-white font-medium text-sm gap-6">
-        <a className="hover:text-purple-200" href="#">Trang chủ</a>
+        <Link to="/" className="hover:text-purple-200">Trang chủ</Link>
         <a className="hover:text-purple-200" href="#">Giới thiệu</a>
         {/* Dropdown sản phẩm */}
         <div className="relative group">
