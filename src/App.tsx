@@ -10,6 +10,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import VerifyCodePage from "./pages/VerifyCodePage";
+import CartList from "./pages/CartList"; 
 import { CartProvider } from "./contexts/CartContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/order-success" element={<OrderSuccessPage />} /> {/* Thêm tuyến OrderSuccessPage */}
                 <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/cart-list" element={<CartList />} />
               </Routes>
             </Layout>
             <ToastContainer position="top-right" autoClose={3000} />

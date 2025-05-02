@@ -458,25 +458,45 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 onMouseEnter={() => setIsDropdownOpen(true)}
                 onMouseLeave={() => setIsDropdownOpen(false)}
               >
-                {user ? (
+                  {user ? (
                   <>
-                    <span className="block px-4 py-2 text-sm font-medium">{user.name}</span>
-                    <button
-                      onClick={() => {
-                        logout();
-                        navigate("/");
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-pink-50"
-                    >
-                      Đăng xuất
-                    </button>
+                  <span className="block px-4 py-2 text-sm font-medium">{user.name}</span>
+
+                  <Link
+                  to="/cart-list"
+                  className="block px-4 py-2 text-sm hover:bg-pink-50 transition-colors"
+                  >
+                  Đơn mua
+                  </Link>
+
+                  <button
+                  onClick={() => {
+                  logout();
+                  navigate("/");
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm hover:bg-pink-50 transition-colors"
+                  >
+                  Đăng xuất
+                  </button>
                   </>
-                ) : (
+                  ) : (
                   <>
-                    <Link to="/login" className="block px-4 py-2 text-sm hover:bg-pink-50">Đăng nhập</Link>
-                    <Link to="/register" className="block px-4 py-2 text-sm hover:bg-pink-50">Đăng ký</Link>
+                  <Link
+                  to="/login"
+                  className="block px-4 py-2 text-sm hover:bg-pink-50 transition-colors"
+                  >
+                  Đăng nhập
+                  </Link>
+
+                  <Link
+                  to="/register"
+                  className="block px-4 py-2 text-sm hover:bg-pink-50 transition-colors"
+                  >
+                  Đăng ký
+                  </Link>
                   </>
-                )}
+                  )}
+
               </div>
             )}
           </div>

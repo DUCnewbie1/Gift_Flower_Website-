@@ -17,6 +17,8 @@ import { syncCart } from './controllers/cartController.js';
 import Product from './models/Product.js';
 import Order from './models/Order.js';
 import Cart from './models/Cart.js';
+import orderRoutes from './routes/orderRoutes.js';
+
 
 dotenv.config();
 
@@ -209,6 +211,8 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/cart', cartRoutes);
 app.post('/api/auth/login', login);
 app.post('/api/cart/sync', syncCart);
+
+app.use("/api/orders", orderRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
