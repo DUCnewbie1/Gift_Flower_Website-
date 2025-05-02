@@ -97,3 +97,34 @@ export const getNewProducts = async (req, res) => {
     res.status(500).json({ error: 'Không thể lấy sản phẩm mới' });
   }
 };
+
+
+// [GET] /api/products/search
+export const searchProducts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) {
+      return res.status(400).json({ error: "Vui lòng cung cấp từ khóa tìm kiếm" });
+    }
+
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } }, // Tìm theo tên, không phân biệt hoa thường
+        { category: { $regex: query, $options: "i" } }, // Tìm theo danh mục
+      ],
+    })
+      .limit(10) // Giới hạn 10 gợi ý
+      .select("name category price image"); // Chỉ lấy các trường cần thiết
+
+    const enriched = products.map((p) => {
+      return {
+        ...p.toObject(),
+        image: p.image?.startsWith("http") ? p.image : `${BASE_URL}${p.image}`,
+      };
+    });
+
+    res.json(enriched);
+  } catch (err) {
+    res.status(500).json({ error: "Lỗi khi tìm kiếm sản phẩm", details: err.message });
+  }
+};

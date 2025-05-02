@@ -12,6 +12,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from './routes/productRoutes.js';
 import bannerRoutes from './routes/bannerRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
+import blogRoutes from './routes/blogRoutes.js'; 
 import { login } from './controllers/authController.js';
 import { syncCart } from './controllers/cartController.js';
 import Product from './models/Product.js';
@@ -207,6 +208,7 @@ app.use("/api/categories", categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/blogs', blogRoutes); 
 app.post('/api/auth/login', login);
 app.post('/api/cart/sync', syncCart);
 

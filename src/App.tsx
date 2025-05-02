@@ -10,11 +10,14 @@ import CheckoutPage from "./pages/CheckoutPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import VerifyCodePage from "./pages/VerifyCodePage";
+import SearchResults from "./pages/SearchResults";
+import BlogList from "./pages/BlogList";
+import BlogDetail from "./pages/BlogDetail";
 import { CartProvider } from "./contexts/CartContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -32,8 +35,11 @@ function App() {
                 <Route path="/detail/:id" element={<ProductDetailPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/order-success" element={<OrderSuccessPage />} /> {/* Thêm tuyến OrderSuccessPage */}
+                <Route path="/order-success" element={<OrderSuccessPage />} />
                 <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/search" element={<SearchResults />} />
+                <Route path="/blog" element={<BlogList />} />
+                <Route path="/blog/:id" element={<BlogDetail />} />
               </Routes>
             </Layout>
             <ToastContainer position="top-right" autoClose={3000} />
