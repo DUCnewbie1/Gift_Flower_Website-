@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Define the type for favorite items
 interface FavoriteItem {
-  id: number;
+  _id: string; // Thay id: number thành _id: string
   name: string;
   price: number;
   originalPrice?: number;
@@ -14,8 +14,8 @@ interface FavoriteItem {
 interface FavoritesContextType {
   favoriteItems: FavoriteItem[];
   addToFavorites: (item: FavoriteItem) => void;
-  removeFromFavorites: (id: number) => void;
-  isInFavorites: (id: number) => boolean;
+  removeFromFavorites: (id: string) => void; // Thay number thành string
+  isInFavorites: (id: string) => boolean; // Thay number thành string
   totalFavoriteItems: number;
 }
 
@@ -44,19 +44,19 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Add an item to favorites
   const addToFavorites = (item: FavoriteItem) => {
     // Check if item is already in favorites
-    if (!favoriteItems.some(favoriteItem => favoriteItem.id === item.id)) {
+    if (!favoriteItems.some(favoriteItem => favoriteItem._id === item._id)) { // Thay item.id thành item._id
       setFavoriteItems([...favoriteItems, item]);
     }
   };
 
   // Remove an item from favorites
-  const removeFromFavorites = (id: number) => {
-    setFavoriteItems(favoriteItems.filter(item => item.id !== id));
+  const removeFromFavorites = (id: string) => { // Thay number thành string
+    setFavoriteItems(favoriteItems.filter(item => item._id !== id)); // Thay item.id thành item._id
   };
 
   // Check if an item is in favorites
-  const isInFavorites = (id: number) => {
-    return favoriteItems.some(item => item.id === id);
+  const isInFavorites = (id: string) => { // Thay number thành string
+    return favoriteItems.some(item => item._id === id); // Thay item.id thành item._id
   };
 
   // Inside the FavoritesProvider component

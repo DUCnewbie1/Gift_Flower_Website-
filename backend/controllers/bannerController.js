@@ -1,9 +1,20 @@
 import Banner from '../models/Banner.js';
 
+const BASE_URL = "http://localhost:5000";
+
 export const getAllBanners = async (req, res) => {
   try {
     const banners = await Banner.find({ active: true }).sort({ createdAt: -1 });
-    res.json(banners);
+
+    const enriched = banners.map(b => {
+      const image = b.image?.startsWith("http") ? b.image : `${BASE_URL}${b.image}`;
+      return {
+        ...b.toObject(),
+        image
+      };
+    });
+
+    res.json(enriched);
   } catch (err) {
     res.status(500).json({ error: 'Không thể lấy danh sách banner' });
   }

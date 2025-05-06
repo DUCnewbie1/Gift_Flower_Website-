@@ -6,12 +6,17 @@ import RegisterPage from "./pages/RegisterPage";
 import ProductListPage from "./pages/ProductListPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import OrderSuccessPage from "./pages/OrderSuccessPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import VerifyCodePage from "./pages/VerifyCodePage";
-
 import { CartProvider } from "./contexts/CartContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -23,14 +28,23 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route
+                  path="/ForgotPasswordPage"
+                  element={<ForgotPasswordPage />}
+                />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/verify-code" element={<VerifyCodePage />} />
                 <Route path="/list" element={<ProductListPage />} />
                 <Route path="/detail/:id" element={<ProductDetailPage />} />
                 <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/order-success" element={<OrderSuccessPage />} />
                 <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                
               </Routes>
             </Layout>
+            <ToastContainer position="top-right" autoClose={3000} />
           </BrowserRouter>
         </FavoritesProvider>
       </CartProvider>
