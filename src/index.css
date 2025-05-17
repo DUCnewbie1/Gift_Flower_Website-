@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 340 82% 52%; /* Pink primary color */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 340 100% 97%; /* Light pink */
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 340 100% 97%; /* Light pink accent */
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 340 82% 52%; /* Pink ring color */
+    --radius: 0.5rem;
+    
+    /* Custom colors for the gift shop */
+    --pink-light: 340 100% 97%;
+    --pink-medium: 340 82% 65%;
+    --pink-dark: 340 82% 52%;
+    --purple-light: 280 67% 80%;
+    --purple-medium: 280 67% 65%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom classes for the gift shop */
+@layer components {
+  .btn-pink {
+    @apply bg-pink-500 text-white rounded px-3 py-1 text-sm hover:bg-pink-600 transition-colors;
+  }
+  
+  .btn-pink-outline {
+    @apply border border-pink-500 text-pink-500 rounded px-3 py-1 text-sm hover:bg-pink-50 transition-colors;
+  }
+  
+  .product-card {
+    @apply bg-white rounded-lg shadow-sm flex flex-col p-2 relative border border-gray-100 hover:shadow-md transition-shadow;
+  }
+  
+  .product-image {
+    @apply w-full bg-gray-100 rounded-md flex items-center justify-center;
+  }
+  
+  .product-title {
+    @apply text-sm font-medium line-clamp-2;
+  }
+  
+  .product-price {
+    @apply font-semibold text-pink-600 mt-1;
+  }
+}
