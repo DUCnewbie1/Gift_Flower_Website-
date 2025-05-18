@@ -21,7 +21,6 @@ import Cart from './models/Cart.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import Review from "./models/Review.js";
 
-
 dotenv.config();
 
 const app = express();
@@ -30,21 +29,45 @@ app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
+// ✅ Serve static frontend (React build)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ✅ Fallback cho React Router SPA
+app.use((req, res, next) => {
+  if (req.method === 'GET' && !req.url.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  } else {
+    next();
+  }
+});
+
+// ✅ MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Đã kết nối MongoDB Atlas"))
   .catch((err) => console.error("❌ Lỗi MongoDB:", err));
 
+// ✅ MoMo config
 const partnerCode = process.env.MOMO_PARTNER_CODE || 'MOMOOJOI20210710';
 const accessKey = process.env.MOMO_ACCESS_KEY || 'iPXneGmrJH0G8FOP';
 const secretKey = process.env.MOMO_SECRET_KEY || 'sFcbSGRSJjwGxwhhcEktCHWYUuTuPNDB';
 const momoEndpoint = 'https://test-payment.momo.vn/v2/gateway/api/create';
-
 const baseNgrokUrl = 'http://localhost:5000';
 const notifyUrl = `${baseNgrokUrl}/momo-webhook`;
-const defaultReturnUrl = 'http://localhost:5173/order-success';
+const defaultReturnUrl = `${process.env.CLIENT_RETURN_URL}/order-success`;
 
+// ✅ API routes
+app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/banners', bannerRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/blogs', blogRoutes); 
+app.use('/api/reviews', reviewRoutes); 
+app.post('/api/auth/login', login);
+app.post('/api/cart/sync', syncCart);
+
+// ✅ MoMo Payment
 app.post('/api/create-momo-payment', async (req, res) => {
   const { orderId, requestId, amount, cartItems, customerInfo, userId } = req.body;
   const amountInt = parseInt(amount);
@@ -83,10 +106,6 @@ app.post('/api/create-momo-payment', async (req, res) => {
     extraData,
   };
 
-  console.log("MoMo Request Body:", requestBody);
-  console.log("Raw Signature:", rawSignature);
-  console.log("Signature:", signature);
-
   try {
     const response = await axios.post(momoEndpoint, requestBody);
     res.json(response.data);
@@ -100,6 +119,7 @@ app.post('/api/create-momo-payment', async (req, res) => {
   }
 });
 
+// ✅ Đơn hàng + Webhook
 app.post('/api/save-order', async (req, res) => {
   const { orderId, amount, paymentMethod, status, userId, cartItems, customerInfo } = req.body;
 
@@ -206,16 +226,7 @@ app.get('/api/order/:orderId', async (req, res) => {
   }
 });
 
-app.use("/api/users", userRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/banners', bannerRoutes);
-app.use('/api/cart', cartRoutes);
-app.use('/api/blogs', blogRoutes); 
-app.use('/api/reviews', reviewRoutes); 
-app.post('/api/auth/login', login);
-app.post('/api/cart/sync', syncCart);
-
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Backend đang chạy tại http://localhost:${PORT}`);
