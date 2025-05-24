@@ -35,5 +35,5 @@ COPY --from=build-frontend /app/dist ./public
 USER node
 
 # Expose port and run app
-EXPOSE 5000
+EXPOSE 80
 CMD ["node", "server.js"]
