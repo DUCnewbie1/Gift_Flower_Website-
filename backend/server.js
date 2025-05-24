@@ -52,7 +52,7 @@ const partnerCode = process.env.MOMO_PARTNER_CODE || 'MOMOOJOI20210710';
 const accessKey = process.env.MOMO_ACCESS_KEY || 'iPXneGmrJH0G8FOP';
 const secretKey = process.env.MOMO_SECRET_KEY || 'sFcbSGRSJjwGxwhhcEktCHWYUuTuPNDB';
 const momoEndpoint = 'https://test-payment.momo.vn/v2/gateway/api/create';
-const baseNgrokUrl = 'http://localhost:5000';
+const baseNgrokUrl = import.meta.env.VITE_BASE_WEBHOOK_URL;
 const notifyUrl = `${baseNgrokUrl}/momo-webhook`;
 const defaultReturnUrl = `${process.env.CLIENT_RETURN_URL}/order-success`;
 
