@@ -1,6 +1,6 @@
 import Product from '../models/Product.js';
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 // [GET] /api/products
 export const getAllProducts = async (req, res) => {

@@ -1,31 +1,39 @@
 # Giai đoạn 1: Build frontend
-FROM node:22 AS build-frontend
+FROM node:22-slim AS build-frontend
 
 WORKDIR /app
 
-COPY . .
-
+# Copy only package files first to leverage caching
+COPY package*.json ./
 RUN npm install
+
+# Copy source code and build
+COPY . .
 RUN npm run build
 
-# Giai đoạn 2: Chạy backend
-FROM node:22
+# Remove dev dependencies and clean cache to reduce size
+RUN npm prune --production && npm cache clean --force
 
-WORKDIR /app
+# Giai đoạn 2: Chạy backend
+FROM node:22-slim
+
+WORKDIR /app/backend
 
 # Copy backend package files
-COPY backend/package*.json ./backend/
+COPY backend/package*.json ./
 
-# ✅ Cài dependencies bên trong container (build lại bcrypt cho Linux)
-RUN cd backend && npm install
+# Install only production dependencies
+RUN npm install --production && npm cache clean --force
 
-# Copy backend source code (KHÔNG copy node_modules)
-COPY backend ./backend
+# Copy backend source code
+COPY backend .
 
-# Copy frontend đã build
-COPY --from=build-frontend /app/dist ./backend/public
+# Copy built frontend from previous stage
+COPY --from=build-frontend /app/dist ./public
 
-# Chạy app
-WORKDIR /app/backend
+# Set non-root user for security
+USER node
+
+# Expose port and run app
 EXPOSE 5000
 CMD ["node", "server.js"]
