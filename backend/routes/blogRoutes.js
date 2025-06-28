@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-// Lấy tất cả bài viết
+// Lấy tất cả bài viết.
 router.get('/', getAllBlogs);
 
 // Lấy bài viết theo ID

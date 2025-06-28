@@ -1,4 +1,4 @@
-// routes/bannerRoutes.js
+// routes/bannerRoutes.js 0
 import express from 'express';
 import { getAllBanners } from '../controllers/bannerController.js';
 

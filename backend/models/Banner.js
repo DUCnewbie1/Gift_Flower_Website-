@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Mô hình Banner
 const bannerSchema = new mongoose.Schema({
   image: { type: String, required: true }, // đường dẫn ảnh
   link: { type: String }, // nếu muốn chuyển trang khi click

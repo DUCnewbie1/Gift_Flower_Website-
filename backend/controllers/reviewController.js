@@ -29,6 +29,7 @@ export const getReviews = async (req, res) => {
     }
   });
 };
+// [DELETE] /api/reviews/:id
 export const getReviewSummary = async (req, res) => {
   const { productId } = req.params;
   const reviews = await Review.find({ productId });

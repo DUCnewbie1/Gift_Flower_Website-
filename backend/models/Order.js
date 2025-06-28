@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Mô hình đơn hàng
 const orderSchema = new mongoose.Schema({
   orderId: { type: String, required: true, unique: true },
   transactionId: { type: String },

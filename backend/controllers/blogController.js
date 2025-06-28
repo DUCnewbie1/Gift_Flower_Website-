@@ -16,6 +16,8 @@ export async function getAllBlogs(req, res) {
 }
 
 // Lấy bài viết theo ID
+// Chỉ dành cho admin
+// Loại bỏ tất cả * trong content của bài viết
 export async function getBlogById(req, res) {
   try {
     const blog = await Blog.findById(req.params.id);

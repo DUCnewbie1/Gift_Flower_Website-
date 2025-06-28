@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const router = express.Router();
-
+// Thư viện nodemailer để gửi email
 // Cấu hình nodemailer để gửi email
 const transporter = nodemailer.createTransport({
   service: "Gmail",

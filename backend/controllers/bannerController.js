@@ -19,7 +19,7 @@ export const getAllBanners = async (req, res) => {
     res.status(500).json({ error: 'Không thể lấy danh sách banner' });
   }
 };
-
+// Tạo banner mới
 export const createBanner = async (req, res) => {
   try {
     const newBanner = new Banner(req.body);
