@@ -14,7 +14,9 @@ RUN npm run build
 # Remove dev dependencies and clean cache to reduce size
 RUN npm prune --production && npm cache clean --force
 
-# Giai đoạn 2: Chạy backend
+# Giai đoạn 2: Chạy backend 
+# Use a separate stage for the backend to keep the image size small
+# and ensure only necessary files are included in the container
 FROM node:22-slim
 
 WORKDIR /app/backend
