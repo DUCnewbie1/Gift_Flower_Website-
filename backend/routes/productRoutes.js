@@ -10,6 +10,7 @@ import {
   searchProducts, 
 } from "../controllers/productController.js";
 
+// import { verifyToken } from "../middlewares/authMiddleware.js"; // Nếu cần xác thực
 const router = express.Router();
 
 router.get("/", getAllProducts);

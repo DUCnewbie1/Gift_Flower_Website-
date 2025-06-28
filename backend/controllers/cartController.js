@@ -49,7 +49,8 @@ export const getCartByUserId = async (req, res) => {
     res.status(500).json({ error: 'Lỗi khi lấy giỏ hàng' });
   }
 };
-
+// Lưu ý: Đảm bảo rằng `userId` và `productId` là ObjectId hợp lệ trước khi thực hiện các thao tác với cơ sở dữ liệu.
+// Nếu không, bạn có thể trả về lỗi 400 Bad Request với thông báo thích hợp
 export const removeFromCart = async (req, res) => {
   const { userId, productId } = req.params;
 

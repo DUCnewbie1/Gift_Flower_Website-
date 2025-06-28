@@ -3,6 +3,8 @@ import Product from '../models/Product.js';
 const BASE_URL = process.env.VITE_API_URL;
 
 // [GET] /api/products
+// Lấy tất cả sản phẩm với các bộ lọc
+// - isHot: true/false
 export const getAllProducts = async (req, res) => {
   try {
     const { isHot, minDiscount, category } = req.query;

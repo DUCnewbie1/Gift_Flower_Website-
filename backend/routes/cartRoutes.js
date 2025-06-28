@@ -5,7 +5,7 @@ import { addToCart, getCartByUserId, removeFromCart } from '../controllers/cartC
 const router = express.Router();
 
 router.post('/add', addToCart);
-router.get('/:userId', getCartByUserId); // ✅ Thêm dòng này
+router.get('/:userId', getCartByUserId); // ✅ Thêm dòng này.
 router.delete('/:userId/:productId', removeFromCart); 
 
 export default router;

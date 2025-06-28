@@ -7,7 +7,8 @@ const cartItemSchema = new mongoose.Schema({
   image: String,
   quantity: { type: Number, default: 1 }
 });
-
+// Mô hình giỏ hàng
+// Giỏ hàng sẽ chứa các sản phẩm đã thêm vào, mỗi sản phẩm có thể có
 const cartSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
   items: [cartItemSchema],

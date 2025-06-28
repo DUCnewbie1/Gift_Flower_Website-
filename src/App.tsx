@@ -20,7 +20,7 @@ import { ToastContainer } from "react-toastify";
 import { ReviewsProvider } from "./contexts/ReviewsContext";
 
 import "react-toastify/dist/ReactToastify.css";
-
+// This is the main application file that sets up the routing and context providers for the application.
 function App() {
   return (
     <AuthProvider>

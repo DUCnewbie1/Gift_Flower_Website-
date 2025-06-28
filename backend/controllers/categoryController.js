@@ -11,6 +11,7 @@ export const getAllCategories = async (req, res) => {
 };
 
 // Thêm mới category (nếu muốn dùng POST)
+// Chỉ dành cho admin
 export const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
