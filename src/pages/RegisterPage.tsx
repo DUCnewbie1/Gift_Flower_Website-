@@ -10,7 +10,7 @@ export default function RegisterPage() {
     phone: "",
     password: "",
   });
-
+  // State variables for form handling
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);

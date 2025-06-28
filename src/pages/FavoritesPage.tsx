@@ -4,6 +4,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { useCart } from '../contexts/CartContext';
 
 export default function FavoritesPage() {
+  // Hooks
   const navigate = useNavigate();
   const { favoriteItems, removeFromFavorites, totalFavoriteItems } = useFavorites();
   const { addToCart } = useCart();

@@ -12,7 +12,7 @@ export default function HomePage() {
     description?: string;
     link?: string;
   }
-
+  // Hooks
   const { addToCart } = useCart();
   const [categories, setCategories] = useState<string[]>([]);
   const [newProducts, setNewProducts] = useState<any[]>([]);

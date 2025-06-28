@@ -12,7 +12,7 @@ export default function OrderSuccessPage() {
   const [orderId, setOrderId] = useState('');
   const [amount, setAmount] = useState('');
   const [toastShown, setToastShown] = useState(false);
-
+  // Kiểm tra xem user có đăng nhập không
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const resultCode = queryParams.get('resultCode');

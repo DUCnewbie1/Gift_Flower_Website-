@@ -19,7 +19,7 @@ export default function CartPage() {
       timeout = setTimeout(() => func(...args), wait);
     };
   };
-
+  // Hàm debounce để xóa sản phẩm khỏi giỏ hàng
   const handleRemoveFromCart = useCallback(
     debounce((productId: string) => {
       removeFromCart(productId);

@@ -13,7 +13,7 @@ export default function ProductDetailPage() {
   const { addToFavorites, removeFromFavorites, isInFavorites } = useFavorites();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<ProductType | null>(null);
-
+  // Kiểm tra xem id có hợp lệ không
   useEffect(() => {
     const fetchProduct = async () => {
       try {

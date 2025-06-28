@@ -8,7 +8,7 @@ export default function CartList() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-
+  // Lấy đơn hàng
   useEffect(() => {
     const fetchOrders = async () => {
       try {

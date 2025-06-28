@@ -12,7 +12,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState('TRANSFER');
   const [invoiceRequested, setInvoiceRequested] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  // Kiểm tra xem người dùng đã đăng nhập chưa
   useEffect(() => {
     if (!user) {
       toast.error('Vui lòng đăng nhập để tiếp tục thanh toán');

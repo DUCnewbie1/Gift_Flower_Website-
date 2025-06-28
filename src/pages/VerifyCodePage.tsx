@@ -10,7 +10,7 @@ const VerifyCodePage = () => {
   const navigate = useNavigate();
 
   const email = location.state?.email;
-
+  // Kiểm tra xem email có được truyền qua state không 
   const handleVerify = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {

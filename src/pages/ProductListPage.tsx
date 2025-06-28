@@ -4,6 +4,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { useNavigate } from "react-router-dom";
 
 export default function ProductListPage() {
+  // Hooks
   const { addToCart } = useCart();
   const { addToFavorites, removeFromFavorites, isInFavorites } = useFavorites();
   const navigate = useNavigate();
